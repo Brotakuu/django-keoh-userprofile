@@ -8,7 +8,15 @@ from django.db import models
 from PIL import Image
 from django.db.models.signals import post_save, pre_save
 import os
+import uuid
 
+## custom code to upload images to AWS S3
+def upload_to_location(instance, filename):
+    blocks = filename.split('.')
+    ext = blocks[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    instance.title = blocks[0]
+    return os.path.join('uploads/', filename)
 
 class UserProfile(models.Model):
 
@@ -25,7 +33,7 @@ class UserProfile(models.Model):
 		new_path = 'user_profile/%s%s-avatar%s' %(self.user.first_name, self.user.pk, extension)
 		return new_path
 
-	avatar = models.ImageField(storage=OverwriteStorage(), upload_to=save_avatar, blank=True)
+	avatar = models.ImageField(upload_to=upload_to_location, null=True, blank=True)
 
 	def __unicode__(self):
 		return self.user.username
