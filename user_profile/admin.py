@@ -21,7 +21,7 @@ class UserAdmin(UserAdmin):
 		return html
 
 	avatar_admin.allow_tags = True
-	avatar_admin.short_description = 'Avatar'
+	avatar_admin.short_description = 'Avatar1'
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
